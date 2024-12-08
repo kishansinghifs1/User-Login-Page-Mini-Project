@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="bn.png" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css">
+    <title>NextChess</title>
+    <style type="text/css">
+      html, body {
+        overflow: hidden;
+      }
+      </style>
+</head>
+<script>
+   let isLoggedIn = false; 
+  function handleLogin(event) {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    if (!email || !password) {
+      alert('Please enter both email and password.');
+      return;
+    }
+    console.log('Login:', { email, password });
+    fetch("http://localhost:7050/signin?username="+email+"&password="+password)
+    .then(function(response){
+            response.text()
+            .then(function(ans){
+              document.getElementById("welcome-message").innerHTML = ans;
+              isLoggedIn = true; 
+              updateLoginLogoutButton(); 
+            })
+        });
+  }
+
+  function handleRegister(event) { 
+    const username = document.getElementById('registerUsername').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    if (!username || !email || !password) {
+      alert('Please fill in all fields.');
+      return;
+    }
+    console.log('Register:', { username, email, password });
+    fetch("http://localhost:7050/signup?username="+email+"&password="+password+"&name="+username)
+    .then(function(response){
+            response.text()
+            .then(function(ans){
+              document.getElementById("welcome-message").innerHTML = ans;
+            })
+        });
+
+   }
+   function handleLogout() {
+    isLoggedIn = false; 
+    updateLoginLogoutButton(); 
+    location.reload();
+  }
+  function updateLoginLogoutButton() {
+    const button = document.getElementById('loginLogoutButton');
+    if (isLoggedIn) {
+      button.innerText = 'Logout';
+      button.onclick = handleLogout; 
+    } else {
+      button.innerText = 'Login';
+      button.onclick = function() {
+      };
+    }
+  }
+</script>
+<body>
+  <div class="welcome-message" id="welcome-message">
+    Welcome to NextChess
+</div>
+  <header>
+    <h2 class="logo">NextChess</h2>
+    <nav class="navigation">
+        <a href="">Home</a>
+        <a href="">Contact</a>
+        <a href="">Service</a>
+        <button type="button" class="btnlog" id="loginLogoutButton">Login</button>
+    </nav>
+  </header>
+    <div class="wrapper">
+      <span class="icon-close"><ion-icon name="close-circle-outline"></ion-icon>
+      </span>
+      <div class="form-box-login">
+           <h2>Login</h2>
+            <form action="#">
+              <div class="input-box">
+                <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
+                <input type="email" required id="loginEmail" />
+                <label>Email</label >
+              </div>
+              <div class="input-box">
+                <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
+                <input type="password"required id="loginPassword"/>
+                <label>Password</label >
+              </div>
+              <div class="remember-forgot">
+                <label><input type="checkbox"> Remember Me ?</label>
+                <a href="#">Forgot Password</a>
+              </div>
+              <button   type="submit" class="btn" onclick="handleLogin()">Login</button>
+             <div class="login-register">
+              <p>Don't have a account <a href="#" class="register-link">  Register</a></p>
+             </div>  
+            </form>
+      </div>
+      <div class="form-box-register">
+        <h2>Register</h2>
+         <form action="#">
+          <div class="input-box">
+            <span class="icon"><ion-icon name="person-circle-outline"></ion-icon></span>
+            <input type="Username" required id="registerUsername"/>
+            <label>Username</label >
+          </div>
+           <div class="input-box">
+             <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
+             <input type="email" required id="registerEmail"/>
+             <label>Email</label >
+           </div>
+           <div class="input-box">
+             <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
+             <input type="password"required id="registerPassword"/>
+             <label>Password</label >
+           </div>
+           <div class="remember-forgot">
+             <label><input type="checkbox"> I agree to terms and condition</label>
+           </div>
+           <button type="submit" class="btn" onclick="handleRegister()">Register</button>
+          <div class="login-register">
+           <p>Already have a account <a href="#" class="login-link"> Login</a></p>
+          </div>  
+         </form>
+   </div>
+    </div>
+    <script src="script.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
